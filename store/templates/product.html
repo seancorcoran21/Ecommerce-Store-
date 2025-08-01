@@ -40,14 +40,20 @@
  
         {% else %}
             ${{ product.price }}
+            
                                     
 
         {% endif %}
         <br></br>
         <br></br>
         <center>
-<br></br>        <a href="{% url 'home' %}" class="btn btn-secondary">Home</a>
+<br></br>        <a href="{% url 'home' %}" class="btn btn-secondary" id="add-cart">Home</a>
+<button type="button" class="btn btn-secondary add-to-cart" data-product-id="{{ product.id }}">
+  Add To Cart
+</button>                  
         </center>
+        
+
 
    
       </div>
@@ -55,5 +61,47 @@
   </div>
 </div>
 </div>    
+
+<script>
+document.querySelectorAll('.add-to-cart').forEach(button => {
+  button.addEventListener('click', async () => {
+    const productId = button.dataset.productId;
+
+    if (!productId) {
+      alert("Product ID is missing.");
+      return;
+    }
+
+    const response = await fetch('/cart/add/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      body: new URLSearchParams({
+        'action': 'post',
+        'product_id': productId
+      })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert(`${data["Product Name: "]} added to cart`);
+    } else {
+      alert(`Error: ${data.error}`);
+    }
+  });
+});
+
+function getCookie(name) {
+  const cookieValue = document.cookie
+    .split('; ')
+    .find(row => row.startsWith(name + '='))
+    ?.split('=')[1];
+  return decodeURIComponent(cookieValue || '');
+}
+</script>
+
 
 {% endblock %}
