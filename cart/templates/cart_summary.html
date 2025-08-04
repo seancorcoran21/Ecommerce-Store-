@@ -13,5 +13,69 @@
                 </div>
             </div>
         </header>
-<br><br/><br><br/><br><br/>        
+        <br><br/>
+        <div class="container">
+        {% if cart_products %}
+            {% for product in cart_products %}
+                <div class="card mb-3">
+  <div class="row g-0">
+    <div class="col-md-4">
+      <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="...">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        
+        <h5 class="card-title">{{ product.name }}</h5>
+        <p class="card-text">{{ product.description }}</p>
+        <br></br>
+        <br></br>
+       
+        <center>
+
+        {% if product.is_sale %}
+                            <!-- Sale Badge-->
+                             <div class="badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem;">Sale</div>
+
+                          
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    
+                                    <!-- Product price-->  
+                                    <strike>${{ product.price }}</strike>
+                                    &nbsp;
+                                    ${{ product.sale_price }}
+                                    </center>
+                                    
+                                    
+                                    
+ 
+        {% else %}
+            ${{ product.price }}
+            
+                                    
+
+        {% endif %}
+        
+
+        <center>
+<br></br>        <a href="{% url 'home' %}" class="btn btn-secondary" id="add-cart">Home</a>
+                 
+        </center>
+        
+
+
+   
+      </div>
+    </div>
+  </div>
+</div>
+            {% endfor %}
+            {% else %}
+            Theres Nothing In Your Cart...
+            {% endif %}
+            <br><br/><br><br/><br><br/> 
+        </div>
+
+       
 {% endblock %}
