@@ -18,7 +18,12 @@ def cart_add(request):
         try:
             product = get_object_or_404(Product, id=int(product_id))
             cart.add(product=product)
-            return JsonResponse({'Product Name: ': product.name})
+
+            cart_quantity = cart.__len__()
+            #return JsonResponse({'Product Name: ': product.name})
+            
+            return JsonResponse({'qty': cart_quantity})
+
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
     

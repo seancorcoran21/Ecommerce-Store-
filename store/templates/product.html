@@ -63,34 +63,58 @@
 </div>    
 
 <script>
-document.querySelectorAll('.add-to-cart').forEach(button => {
-  button.addEventListener('click', async () => {
-    const productId = button.dataset.productId;
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', async () => {
+      console.log('Add to Cart button clicked!');
 
-    if (!productId) {
-      alert("Product ID is missing.");
-      return;
-    }
+      const productId = button.dataset.productId;
+      console.log('Product ID:', productId);
 
-    const response = await fetch('/cart/add/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'X-CSRFToken': getCookie('csrftoken'),
-      },
-      body: new URLSearchParams({
-        'action': 'post',
-        'product_id': productId
-      })
+      if (!productId) {
+        alert("Product ID is missing.");
+        return;
+      }
+
+      try {
+        const response = await fetch('/cart/add/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCookie('csrftoken'),
+          },
+          body: new URLSearchParams({
+            'action': 'post',
+            'product_id': productId
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          console.log("Server responded with:", data);
+
+          const cartQtyElement = document.getElementById("cart_quantity");
+          console.log("Found cart quantity element:", cartQtyElement);
+
+          if (cartQtyElement) {
+            cartQtyElement.textContent = data.qty;
+            console.log("Badge text updated to:", data.qty);
+          } else {
+            console.warn("Cart quantity element not found in DOM!");
+          }
+
+          // Optional alert:
+          // alert(`${data.qty} item(s) in cart.`);
+        } else {
+          console.error('Error response:', data);
+          alert(`Error: ${data.error}`);
+        }
+      } catch (error) {
+        console.error('Fetch error:', error);
+        alert('An error occurred while adding to cart.');
+      }
     });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      alert(`${data["Product Name: "]} added to cart`);
-    } else {
-      alert(`Error: ${data.error}`);
-    }
   });
 });
 
@@ -102,6 +126,7 @@ function getCookie(name) {
   return decodeURIComponent(cookieValue || '');
 }
 </script>
+
 
 
 {% endblock %}
