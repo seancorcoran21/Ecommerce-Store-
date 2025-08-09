@@ -23,6 +23,17 @@ class Cart():
 
         self.session.modified = True
 
+    def delete(self, product):
+        """Remove a product completely from the cart."""
+        product_id = str(product.id)
+
+        if product_id in self.cart:
+            if self.cart[product_id]['quantity'] > 1:
+                self.cart[product_id]['quantity'] -= 1
+            else:
+                del self.cart[product_id]
+            self.session.modified = True
+
     def __len__(self):
         return sum(item.get('quantity', 1) for item in self.cart.values())
 
