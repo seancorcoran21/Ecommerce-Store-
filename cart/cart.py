@@ -23,13 +23,26 @@ class Cart():
 
         self.session.modified = True
 
-
     def __len__(self):
         return sum(item.get('quantity', 1) for item in self.cart.values())
-    
+
+    def __iter__(self):
+        """Allow iteration over the cart, yielding product + quantity."""
+        product_ids = self.cart.keys()
+        products = Product.objects.filter(id__in=product_ids)
+
+        # Map product objects to their IDs
+        products_map = {str(product.id): product for product in products}
+
+        for product_id, item in self.cart.items():
+            product = products_map.get(product_id)
+            if product:
+                yield {
+                    'product': product,
+                    'price': float(item['price']),
+                    'quantity': item['quantity'],
+                }
 
     def get_prods(self):
-        product_ids = self.cart.keys()
-
-        products = Product.objects.filter(id__in=product_ids)
-        return products
+        """Returns a queryset of products in the cart."""
+        return Product.objects.filter(id__in=self.cart.keys())
