@@ -62,6 +62,9 @@
 <br></br>        <a href="{% url 'home' %}" class="btn btn-secondary" id="add-cart">Home</a>
 
                 <button type="button" data-index="{{product.id}}" class="btn btn-primary delete-product">Remove</button>
+
+                <a href="{% url 'create_checkout_session' %}" class="btn btn-success">Checkout with Stripe</a>
+
                  
         </center>
         
@@ -73,6 +76,7 @@
   </div>
 </div>
             {% endfor %}
+            <h3>Total: ${{ totals }}</h3>
             {% else %}
             Theres Nothing In Your Cart...
             {% endif %}
