@@ -47,6 +47,10 @@ class Order(models.Model):
     date = models.DateField(default=datetime.datetime.today)
     status = models.BooleanField(default=False)
 
+    @property
+    def total_price(self):
+        return self.product.price * self.quantity
+
     def __str__(self):
         return self.product
 

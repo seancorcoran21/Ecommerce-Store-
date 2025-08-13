@@ -77,3 +77,11 @@ class Cart():
     def get_prods(self):
         """Returns a queryset of products in the cart."""
         return Product.objects.filter(id__in=self.cart.keys())
+    
+
+    def clear(self):
+        """
+        Remove cart from session.
+        """
+        self.session['session_key'] = {}
+        self.session.modified = True

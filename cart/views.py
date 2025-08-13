@@ -7,6 +7,8 @@ import stripe
 
 from .cart import Cart
 from store.models import Product
+from django.contrib.auth.decorators import login_required
+from store.models import Order, Customer # make sure you have OrderItem model too
 
 # Stripe API key
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -95,10 +97,52 @@ def create_checkout_session(request):
     return redirect(checkout_session.url, code=303)
 
 
+
+@login_required
 def payment_success(request):
+    cart = Cart(request)
+
+    customer, created = Customer.objects.get_or_create(
+        email=request.user.email,
+        defaults={
+            'first_name': request.user.first_name,
+            'last_name': request.user.last_name,
+            # You can add more default info if you want
+        }
+    )
+
+    for item in cart:
+        Order.objects.create(
+            product=item['product'],
+            customer=customer,
+            quantity=item['quantity'],
+            address='',
+            phone='',
+            status=False
+        )
+
+    cart.clear()
+
     return render(request, "payment_success.html")
+
 
 def payment_cancel(request):
     return render(request, "payment_cancel.html")
+
+
+@login_required
+def purchase_history(request):
+    customer = Customer.objects.get(email=request.user.email)
+    orders = Order.objects.filter(customer=customer).order_by('-date')
+
+    for order in orders:
+        order.items_list = [{
+            'product': order.product,
+            'quantity': order.quantity,
+            'price': order.product.price,
+            'image': order.product.image.url if order.product.image else None
+        }]
+
+    return render(request, "purchase_history.html", {"orders": orders})
 
 
