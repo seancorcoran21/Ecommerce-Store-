@@ -91,6 +91,40 @@
   }
 }
 
+
+/* === Star rating === */
+.rating-input {
+    display: inline-flex;
+    flex-direction: row-reverse; /* highest star on the left visually */
+    justify-content: flex-start;
+    gap: 4px;
+}
+
+.rating-input input[type="radio"] {
+    position: absolute !important;
+    left: -9999px !important; /* fully hide radios */
+}
+
+.rating-input label {
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+    color: #d0d0d0; /* gray stars */
+    user-select: none;
+}
+
+/* Hover: color the hovered star and all stars to its left (because row-reverse) */
+.rating-input label:hover,
+.rating-input label:hover ~ label {
+    color: #f5c518; /* gold */
+}
+
+/* Selected: keep stars gold up to the checked one */
+.rating-input input[type="radio"]:checked ~ label {
+    color: #f5c518;
+}
+
+
 body {
   margin: 0;
   font-family: var(--bs-body-font-family);
@@ -10824,3 +10858,7 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+
+
+
+

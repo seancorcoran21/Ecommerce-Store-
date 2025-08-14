@@ -14,9 +14,57 @@
       <div class="card-body">
         
         <h5 class="card-title">{{ product.name }}</h5>
+
+        <p>
+            Average Rating:
+            {% with avg=product.average_rating %}
+                {% for i in "12345" %}
+                    {% if forloop.counter <= avg %}
+                        ⭐
+                    {% elif avg|floatformat:1 > forloop.counter0 and avg|floatformat:1 < forloop.counter %}
+                        ⭐½
+                    {% else %}
+                        ☆
+                    {% endif %}
+                {% endfor %}
+                ({{ avg|floatformat:1 }} / 5)
+            {% endwith %}
+        </p>
+
+        <!-- Clickable Star Rating Form -->
+        {% if user.is_authenticated %}
+        <form method="post" class="mt-2">
+            {% csrf_token %}
+            <div class="rating-input" aria-label="Rate this product">
+                <input type="radio" name="score" id="star5" value="5">
+                <label for="star5" title="5 stars">★</label>
+
+                <input type="radio" name="score" id="star4" value="4">
+                <label for="star4" title="4 stars">★</label>
+
+                <input type="radio" name="score" id="star3" value="3">
+                <label for="star3" title="3 stars">★</label>
+
+                <input type="radio" name="score" id="star2" value="2">
+                <label for="star2" title="2 stars">★</label>
+
+                <input type="radio" name="score" id="star1" value="1">
+                <label for="star1" title="1 star">★</label>
+            </div>
+
+            <textarea name="review" class="form-control mt-2" placeholder="Write a review (optional)"></textarea>
+
+            <button type="submit" class="btn btn-primary btn-sm mt-2">Submit Rating</button>
+        </form>
+        {% else %}
+        <p><a href="{% url 'login' %}">Log in</a> to rate this product.</p>
+        {% endif %}
+
+
+
+
+
         <p class="card-text">{{ product.description }}</p>
-        <br></br>
-        <br></br>
         <br></br>
         <center>
 
@@ -45,7 +93,7 @@
 
         {% endif %}
         <br></br>
-        <br></br>
+        
         <center>
 <br></br>        <a href="{% url 'home' %}" class="btn btn-secondary" id="add-cart">Home</a>
 <button type="button" class="btn btn-secondary add-to-cart" data-product-id="{{ product.id }}">
@@ -60,8 +108,26 @@
     </div>
   </div>
 </div>
-</div>    
-
+</div> 
+<section>
+        <div class="container">
+    <div class="card mb-3">
+  <div class="row g-0">
+        <h4>Customer Reviews:</h4>         
+        {% if reviews %}
+            <ul class="list-group">
+                {% for review in reviews %}
+                    <li class="list-group-item">
+                        <strong>{{ review.user.username }}</strong> said:<br>
+                        {{ review.review|linebreaks }}
+                        <small class="text-muted">{{ review.created_at|date:"M d, Y H:i" }}</small>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+    <p>No reviews yet. Be the first to review this product!</p>
+{% endif %}   
+</section>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.add-to-cart').forEach(button => {

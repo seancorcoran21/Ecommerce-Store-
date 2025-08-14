@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect
-from .models import Product, Category
+from django.shortcuts import render, redirect, get_object_or_404
+from store.models import Product, Category, Review
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -19,9 +19,33 @@ def category(request, foo):
         return redirect('home')
 
 
-def product(request,pk):
-    product = Product.objects.get(id=pk)
-    return render(request, 'product.html', {'product':product})
+def product(request, pk):
+    product = get_object_or_404(Product, id=pk)
+    reviews = product.reviews.all().order_by('-created_at')
+
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            messages.error(request, "You must be logged in to submit a rating.")
+            return redirect('login')
+
+        score = int(request.POST.get('score', 0))
+        review_text = request.POST.get('review', '')
+        user = request.user
+
+        # Save or update the user's review
+        review, created = Review.objects.update_or_create(
+            product=product,
+            user=user,
+            defaults={'score': score, 'review': review_text}
+        )
+
+        messages.success(request, "Your rating has been submitted!")
+        return redirect('product', pk=product.id)
+
+    return render(request, 'product.html', {
+        'product': product,
+        'reviews': reviews
+    })
 
 
 def home(request):

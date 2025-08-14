@@ -1,31 +1,39 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="mb-4">My Purchase History</h1>
+
+<header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">Your Purchase History</h1>
+                </div>
+            </div>
+        </header>
+        <br><br/>
 
 {% if orders %}
     {% for order in orders %}
         <div class="card mb-3">
             <div class="card-body">
                 <h5 class="card-title">
-                    Order #{{ order.id }} — {{ order.created_at|date:"M d, Y" }}
+                    Product {{ order.id }} — {{ order.created_at|date:"M d, Y" }}
                 </h5>
                 <p class="card-text">
                     <strong>Total:</strong> ${{ order.total_price }}
                 </p>
                 <ul class="list-group list-group-flush">
-                    {% for item in order.items_list %}
-                        <li class="list-group-item d-flex align-items-center">
-                            {% if item.image %}
-                                <img src="{{ item.image }}" alt="{{ item.product.name }}" style="width: 60px; height: 60px; object-fit: cover; margin-right: 10px;">
-                            {% endif %}
-                            <div>
-                                <strong>{{ item.product.name }}</strong><br>
-                                {{ item.quantity }} × ${{ item.price }}
-                            </div>
-                        </li>
-                    {% endfor %}
-                </ul>
+                {% for item in order.items_list %}
+                    <li class="list-group-item d-flex align-items-center">
+                        {% if item.image %}
+                            <img src="{{ item.image }}" alt="{{ item.product.name }}" style="width: 60px; height: 60px; object-fit: cover; margin-right: 10px;">
+                        {% endif %}
+                        <div>
+                            <strong>{{ item.product.name }}</strong><br>
+                            {{ item.quantity }} × ${{ item.price }}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
 
             </div>
         </div>
