@@ -75,12 +75,20 @@ def create_checkout_session(request):
     line_items = []
 
     for item in cart:
+        product = item['product']
+        
+        # Use sale_price if it exists and is lower than price
+        if product.sale_price and product.sale_price < product.price:
+            price_to_use = product.sale_price
+        else:
+            price_to_use = product.price
+
         line_items.append({
             'price_data': {
                 'currency': 'usd',
-                'unit_amount': int(item['price'] * 100),  # convert to cents
+                'unit_amount': int(price_to_use * 100),  # convert to cents
                 'product_data': {
-                    'name': item['product'].name,
+                    'name': product.name,
                 },
             },
             'quantity': item['quantity'],
