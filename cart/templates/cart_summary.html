@@ -44,7 +44,7 @@
                                     <!-- Product price-->  
                                     <strike>${{ product.price }}</strike>
                                     &nbsp;
-                                    ${{ product.sale_price }}
+                                    <span class="text-danger">${{ product.sale_price }}</span>
                                     </center>
                                     
                                     
@@ -61,9 +61,9 @@
         <center>
 <br></br>        <a href="{% url 'home' %}" class="btn btn-secondary" id="add-cart">Home</a>
 
-                <button type="button" data-index="{{product.id}}" class="btn btn-primary delete-product">Remove</button>
+                <button type="button" data-index="{{product.id}}" class="btn btn-secondary delete-product">Remove</button>
 
-                <a href="{% url 'create_checkout_session' %}" class="btn btn-success">Checkout with Stripe</a>
+                <a href="{% url 'create_checkout_session' %}" class="btn btn-primary">Checkout</a>
 
                  
         </center>

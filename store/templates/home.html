@@ -38,7 +38,7 @@
                                     <!-- Product price-->
                                     <strike>${{ product.price }}</strike>
                                     &nbsp;
-                                    ${{ product.sale_price }}
+                                    <span class="text-danger">${{ product.sale_price }}</span>
                                 </div>
                             </div>
                             <!-- Product actions-->
@@ -75,22 +75,22 @@
         </section>
         <!-- Pagination controls -->
         <div class="pagination mt-4 text-center">
-            {% if products.has_previous %}
-                <a class="btn btn-outline-primary btn-sm" href="?page={{ products.previous_page_number }}">Previous</a>
-            {% endif %}
+        {% if products.has_previous %}
+            <a class="btn btn-outline-primary btn-sm" href="?page={{ products.previous_page_number }}">Previous</a>
+        {% endif %}
 
-            {% for num in products.paginator.page_range %}
-                {% if products.number == num %}
-                    <span class="btn btn-primary btn-sm">{{ num }}</span>
-                {% else %}
-                    <a class="btn btn-outline-primary btn-sm" href="?page={{ num }}">{{ num }}</a>
-                {% endif %}
-            {% endfor %}
-
-            {% if products.has_next %}
-                <a class="btn btn-outline-primary btn-sm" href="?page={{ products.next_page_number }}">Next</a>
+        {% for num in products.paginator.page_range %}
+            {% if products.number == num %}
+                <span class="btn btn-primary btn-sm">{{ num }}</span>
+            {% else %}
+                <a class="btn btn-outline-primary btn-sm" href="?page={{ num }}">{{ num }}</a>
             {% endif %}
-        </div>
+        {% endfor %}
+
+        {% if products.has_next %}
+            <a class="btn btn-outline-primary btn-sm" href="?page={{ products.next_page_number }}">Next</a>
+        {% endif %}
+    </div>
 
 
 {% endblock %}        

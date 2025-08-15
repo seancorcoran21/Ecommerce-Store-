@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from store.models import Product, Category, Review
+from store.models import Product, Category, Review, Wishlist
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -8,6 +8,7 @@ from .forms import SignUpForm
 from django import forms
 from django.core.paginator import Paginator
 from .models import Product
+from django.contrib.auth.decorators import login_required
 
 def category(request, foo):
     foo = foo.replace('-',' ')
@@ -112,3 +113,26 @@ def register_user(request):
 
 
         return render(request, 'register.html', {'form': form})
+    
+
+@login_required
+def add_to_wishlist(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+    wishlist.products.add(product)
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+@login_required
+def remove_from_wishlist(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    wishlist = get_object_or_404(Wishlist, user=request.user)
+    wishlist.products.remove(product)
+    return redirect('wishlist')
+
+
+@login_required
+def wishlist_view(request):
+    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+    products = wishlist.products.all()
+    return render(request, 'wishlist.html', {'products': products})

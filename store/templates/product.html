@@ -98,7 +98,9 @@
 <br></br>        <a href="{% url 'home' %}" class="btn btn-secondary" id="add-cart">Home</a>
 <button type="button" class="btn btn-secondary add-to-cart" data-product-id="{{ product.id }}">
   Add To Cart
-</button>                  
+</button>
+<a href="{% url 'add_to_wishlist' product.id %}" class="btn btn-primary">Add to Wishlist</a>
+
         </center>
         
 
