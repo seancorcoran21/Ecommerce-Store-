@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .forms import SignUpForm
 from django import forms
+from django.core.paginator import Paginator
+from .models import Product
 
 def category(request, foo):
     foo = foo.replace('-',' ')
@@ -49,8 +51,14 @@ def product(request, pk):
 
 
 def home(request):
-    products = Product.objects.all()
-    return render(request, 'home.html', {'products':products})
+    product_list = Product.objects.all()
+    paginator = Paginator(product_list, 12)  # Show 12 products per page
+
+    page_number = request.GET.get('page')  # Get the current page number from URL
+    products = paginator.get_page(page_number)  # Get products for that page
+
+    return render(request, 'home.html', {'products': products})
+
 
 
 def about(request):

@@ -29,7 +29,12 @@
                         {% endif %}
                         <div>
                             <strong>{{ item.product.name }}</strong><br>
-                            {{ item.quantity }} × ${{ item.price }}
+                            {{ item.quantity }} × 
+                            {% if item.product.is_sale %}
+                                ${{ item.product.sale_price }}
+                            {% else %}
+                                ${{ item.product.price }}
+                            {% endif %}
                         </div>
                     </li>
                 {% endfor %}

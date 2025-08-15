@@ -56,7 +56,9 @@ class Order(models.Model):
 
     @property
     def total_price(self):
-        return self.product.price * self.quantity
+        price = self.product.sale_price if self.product.is_sale else self.product.price
+        return price * self.quantity
+
 
     def __str__(self):
         return self.product
