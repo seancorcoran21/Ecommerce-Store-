@@ -16,10 +16,10 @@
         <div class="card mb-3">
             <div class="card-body">
                 <h5 class="card-title">
-                    Product {{ order.id }} — {{ order.created_at|date:"M d, Y" }}
+                    Product — {{ order.created_at|date:"M d, Y" }}
                 </h5>
                 <p class="card-text">
-                    <strong>Total:</strong> ${{ order.total_price }}
+
                 </p>
                 <ul class="list-group list-group-flush">
                 {% for item in order.items_list %}

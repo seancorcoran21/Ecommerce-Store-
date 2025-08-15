@@ -115,12 +115,12 @@ def payment_success(request):
         defaults={
             'first_name': request.user.first_name,
             'last_name': request.user.last_name,
-            # You can add more default info if you want
         }
     )
 
+    created_orders = []  # to keep track of all orders created
     for item in cart:
-        Order.objects.create(
+        order = Order.objects.create(
             product=item['product'],
             customer=customer,
             quantity=item['quantity'],
@@ -128,10 +128,12 @@ def payment_success(request):
             phone='',
             status=False
         )
+        created_orders.append(order)
 
     cart.clear()
 
-    return render(request, "payment_success.html")
+    # Pass the list of orders to the template
+    return render(request, "payment_success.html", {"orders": created_orders})
 
 
 def payment_cancel(request):

@@ -11,6 +11,43 @@
             </div>
         </header>
         <br><br/>
+        <div class="container my-5">
+    <h2 class="mb-4">Payment Successful!</h2>
+    <p>Thank you for your purchase. Here are the details of your order:</p>
+
+    {% if orders %}
+    {% for order in orders %}
+        <div class="card mb-3" style="max-width: 500px;">
+            <div class="row g-0 align-items-center">
+                <div class="col-md-4">
+                    <img src="{{ order.product.image.url }}" class="img-fluid rounded-start" alt="{{ order.product.name }}">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ order.product.name }}</h5>
+                        <p class="card-text">
+                            Quantity: {{ order.quantity }}<br>
+                            {% if order.product.is_sale %}
+                            <div class="badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem;">Sale</div>
+                                Price: <strike>${{ order.product.price }}</strike> <span class="text-danger">${{ order.product.sale_price }}</span><br>
+                                Total: ${{ order.total_price }}
+                            {% else %}
+                                Price: ${{ order.product.price }}<br>
+                            {% endif %}
+                        </p>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No orders found.</p>
+{% endif %}
+
+
+    
+        </div>
 
   <div class="text-center">
   <a href="{% url 'home' %}" class="btn btn-secondary" id="add-cart">Home</a>
