@@ -22,9 +22,7 @@
                     {% if forloop.counter <= avg %}
                         ⭐
                     {% elif avg|floatformat:1 > forloop.counter0 and avg|floatformat:1 < forloop.counter %}
-                        ⭐½
-                    {% else %}
-                        ☆
+                        ⭐½              
                     {% endif %}
                 {% endfor %}
                 ({{ avg|floatformat:1 }} / 5)
@@ -64,7 +62,7 @@
 
 
 
-        <p class="card-text">{{ product.description }}</p>
+        <p class="card-text">{{ product.description|safe }}</p>
         <br></br>
         <center>
 
@@ -80,7 +78,7 @@
                                     <!-- Product price-->  
                                     <strike>${{ product.price }}</strike>
                                     &nbsp;
-                                    ${{ product.sale_price }}
+                                    <span class="text-danger">${{ product.sale_price }}</span>
                                     </center>
                                     
                                     

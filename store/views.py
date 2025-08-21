@@ -136,3 +136,5 @@ def wishlist_view(request):
     wishlist, created = Wishlist.objects.get_or_create(user=request.user)
     products = wishlist.products.all()
     return render(request, 'wishlist.html', {'products': products})
+
+

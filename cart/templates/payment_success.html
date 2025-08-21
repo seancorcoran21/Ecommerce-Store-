@@ -30,7 +30,6 @@
                             {% if order.product.is_sale %}
                             <div class="badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem;">Sale</div>
                                 Price: <strike>${{ order.product.price }}</strike> <span class="text-danger">${{ order.product.sale_price }}</span><br>
-                                Total: ${{ order.total_price }}
                             {% else %}
                                 Price: ${{ order.product.price }}<br>
                             {% endif %}
