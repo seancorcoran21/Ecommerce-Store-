@@ -9,6 +9,7 @@ from .cart import Cart
 from store.models import Product
 from django.contrib.auth.decorators import login_required
 from store.models import Order, Customer # make sure you have OrderItem model too
+from store.forms import ShippingAddressForm
 
 # Stripe API key
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -98,7 +99,7 @@ def create_checkout_session(request):
         payment_method_types=['card'],
         line_items=line_items,
         mode='payment',
-        success_url=request.build_absolute_uri('/cart/success/'),
+        success_url=request.build_absolute_uri('/cart/shipping-details/'),
         cancel_url=request.build_absolute_uri('/cart/cancel/'),
     )
 
@@ -155,4 +156,18 @@ def purchase_history(request):
 
     return render(request, "purchase_history.html", {"orders": orders})
 
+
+@login_required
+def shipping_details(request):
+    if request.method == "POST":
+        form = ShippingAddressForm(request.POST)
+        if form.is_valid():
+            shipping = form.save(commit=False)
+            shipping.user = request.user
+            shipping.save()
+            # you could link this to an order if you have an Order model
+            return redirect("payment_success")  # or an order confirmation page
+    else:
+        form = ShippingAddressForm()
+    return render(request, "shipping_details.html", {"form": form})
 

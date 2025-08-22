@@ -1,10 +1,11 @@
 from django.contrib import admin
-from . models import Category, Customer, Product, Order
+from . models import Category, Customer, Product, Order, ShippingAddress
 from django.utils.html import format_html
 # Register your models here.
 admin.site.register(Category)
 admin.site.register(Customer)
 admin.site.register(Order)
+admin.site.register(ShippingAddress)
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
@@ -14,3 +15,4 @@ class ProductAdmin(admin.ModelAdmin):
         # Safely replace line breaks with <br>
         return format_html(obj.description.replace("\n", "<br>"))
     short_description.short_description = "Description"
+    

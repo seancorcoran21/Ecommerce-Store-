@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .forms import SignUpForm
+from .forms import SignUpForm, ShippingAddressForm
 from django import forms
 from django.core.paginator import Paginator
 from .models import Product
@@ -162,5 +162,11 @@ def wishlist_view(request):
     wishlist, created = Wishlist.objects.get_or_create(user=request.user)
     products = wishlist.products.all()
     return render(request, 'wishlist.html', {'products': products})
+
+
+
+
+
+
 
 
