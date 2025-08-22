@@ -9,6 +9,7 @@ from django import forms
 from django.core.paginator import Paginator
 from .models import Product
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 def category(request, foo):
     foo = foo.replace('-',' ')
@@ -52,13 +53,38 @@ def product(request, pk):
 
 
 def home(request):
-    product_list = Product.objects.all()
-    paginator = Paginator(product_list, 12)  # Show 12 products per page
+    query = request.GET.get("q")  # search term
+    brand = request.GET.get("brand")
+    category = request.GET.get("category")
 
-    page_number = request.GET.get('page')  # Get the current page number from URL
-    products = paginator.get_page(page_number)  # Get products for that page
+    products = Product.objects.all()
 
-    return render(request, 'home.html', {'products': products})
+    # Search by product name
+    if query:
+        products = products.filter(
+            Q(name__icontains=query) |
+            Q(description__icontains=query)
+        )
+
+    if brand:
+        products = products.filter(brand__icontains=brand)
+
+
+    if category:
+        products = products.filter(category__id=category)
+
+    # Pagination (12 per page)
+    paginator = Paginator(products, 12)
+    page_number = request.GET.get("page")
+    products = paginator.get_page(page_number)
+
+    categories = Category.objects.all()  # for category dropdown
+
+    return render(request, "home.html", {
+        "products": products,
+        "categories": categories
+    })
+
 
 
 

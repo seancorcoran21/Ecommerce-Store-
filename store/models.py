@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import Avg
 import datetime
 from django.contrib.auth.models import User
+from django.conf import settings
 
 #categories of products
 class Category(models.Model):
@@ -81,3 +82,5 @@ class Wishlist(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s Wishlist"
+    
+    
